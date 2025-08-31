@@ -1,0 +1,26 @@
+[package]
+name = "multisig"
+version = "0.1.0"
+description = "Created with Anchor"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "multisig"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build","anchor-spl/idl-build"]
+
+[patch.crates-io]
+# 强制所有依赖使用单一版本的 borsh，与 Anchor 框架的版本保持一致。
+# 这能解决因版本冲突导致的 "trait is not implemented" 错误。
+borsh = "0.10.4"
+
+[dependencies]
+anchor-lang = "0.31.1"
+anchor-spl = "0.31.1"

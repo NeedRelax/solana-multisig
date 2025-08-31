@@ -1,88 +1,166 @@
-# solana-multisig
+# Solana 多签钱包 (Multisig Wallet) - Anchor & Next.js 实现
 
-This is a Next.js app containing:
+ <!-- 强烈建议你截一张 DApp 运行的图片并替换此链接 -->
 
-- Tailwind CSS setup for styling
-- Useful wallet UI elements setup using [@solana/web3.js](https://www.npmjs.com/package/@solana/web3.js)
-- A basic Counter Solana program written in Anchor
-- UI components for interacting with the Counter program
+这是一个功能完备、安全可靠的 Solana 链上多签钱包项目。它使用 **Anchor** 框架构建智能合约，并采用 **Next.js** 和 **React**
+构建现代化、响应式的前端 DApp。
 
-## Getting Started
+本项目旨在提供一个绝佳的学习范例，展示如何使用现代 Web3 技术栈构建一个功能复杂的、与真实世界应用接轨的去中心化应用。
 
-### Installation
+## ✨ 核心功能
 
-#### Download the template
+这个多签钱包不仅仅是一个资金池，它是一个完全由链上投票治理的去中心化组织 (DAO) 的微型雏形。
 
-```shell
-pnpm create solana-dapp@latest -t gh:solana-foundation/templates/web3js/solana-multisig
+### 资金管理
+
+* **创建钱包**: 用户可以轻松创建一个新的多签钱包，自定义所有者 (Owners) 列表和批准阈值 (Threshold)。
+* **金库 (Vault)**: 每个多签钱包都有一个程序派生地址 (PDA) 作为其金库，安全地保管 SOL 资产。
+* **充值**: 任何人都可以向金库地址充值，为多签钱包提供运营资金。
+* **转账提案**: 任何所有者都可以发起从金库向任意地址转移 SOL 的提案。
+
+### 链上治理与管理
+
+所有管理操作都通过与资金转移完全相同的**提案 -> 批准 -> 执行**流程进行，确保了所有变更都是透明且经过授权的。
+
+* **修改阈值**: 通过投票调整执行交易所需的最低批准人数。
+* **管理所有者**: 通过投票添加新的所有者或移除现有所有者。
+* **程序白名单**:
+    * 通过投票管理一份程序白名单，限制金库只能与白名单上的程序进行交互，极大地增强了安全性，防止恶意合约调用。
+    * 可以添加或移除白名单中的程序。
+* **暂停与恢复**:
+    * 在紧急情况下，所有者可以投票暂停钱包，冻结所有新提案和交易执行。
+    * 钱包暂停后，只有“恢复钱包”的提案可以被发起、批准和执行，确保了控制权始终在所有者手中。
+
+### 交易生命周期
+
+* **提案 (Propose)**: 发起一项新的操作。作为提案者，你的批准会自动计入。
+* **批准 (Approve)**: 其他所有者可以对一个待处理的提案进行签名批准。
+* **撤销批准 (Revoke)**: 在交易执行前，已批准的所有者可以撤销自己的批准。
+* **执行 (Execute)**: 一旦提案的批准数达到阈值，任何人都可以触发执行该提案。
+* **取消提案 (Cancel)**: 只有提案的发起者可以在提案被执行前将其取消。
+
+## 🛠️ 技术栈与亮点
+
+### 后端 (智能合约)
+
+* **框架**: [**Anchor (v0.31.1)**](https://www.anchor-lang.com/) - Solana 生态系统中最流行、最安全的智能合约开发框架。
+* **语言**: Rust
+* **核心安全特性**:
+    * **程序派生地址 (PDA)**: 用于创建由程序控制的金库 (Vault) 和其他账户，确保资金和状态只能通过合约逻辑修改。
+    * **Anchor 上下文约束**: 大量使用 `#[account(...)]` 约束，如 `init`, `mut`, `has_one`, `seeds`, `bump`, `constraint`
+      等，在指令执行前进行严格的账户校验，从源头上杜绝了大量潜在的安全漏洞。
+    * **指令内省 (Instruction Introspection)**: 通过解析提案中的指令数据，UI 能够清晰地向用户展示他们正在批准的操作内容（例如“转账
+      1 SOL 到 XXX 地址”或“将阈值修改为 3”），极大地提升了安全性。
+    * **事件 (Events)**: 在关键操作后发出链上事件，便于链下索引服务或 UI 监听。
+
+### 前端 (DApp)
+
+* **框架**: [**Next.js**](https://nextjs.org/) & [**React**](https://react.dev/) - 现代化的 Web 开发框架，提供优异的性能和开发体验。
+* **语言**: TypeScript
+* **核心库**:
+    * **`@solana/wallet-adapter`**: 用于与 Phantom, Solflare 等主流钱包无缝集成。
+    * **`@coral-xyz/anchor`**: Anchor 的官方 TypeScript 客户端，用于与链上程序轻松交互。
+    * **`@tanstack/react-query` (React Query)**: 强大的异步状态管理库，优雅地处理链上数据的获取、缓存、刷新和变更。
+    * **`shadcn/ui` & `tailwindcss`**: 用于构建美观、可访问且高度可定制的 UI 组件。
+
+## 🚀 快速开始
+
+### 环境要求
+
+* Node.js (v18 或更高版本)
+* Rust & Cargo
+* Solana CLI
+* Anchor CLI (本项目使用 v0.31.1)
+
+### 1. 克隆仓库
+
+```bash
+git clone https://github.com/your-username/your-repo-name.git
+cd your-repo-name
 ```
 
-#### Install Dependencies
+### 2. 安装依赖
 
-```shell
-pnpm install
+项目包含两个部分：Anchor 合约和 Next.js 前端。
+
+```bash
+# 安装前端依赖
+npm install
+
+# (Anchor 项目通常不需要单独安装依赖，它由 Cargo 管理)
 ```
 
-## Apps
+### 3. 构建并部署合约
 
-### anchor
+在开始前，请确保你已经启动了本地 Solana 测试验证器。
 
-This is a Solana program written in Rust using the Anchor framework.
-
-#### Commands
-
-You can use any normal anchor commands. Either move to the `anchor` directory and run the `anchor` command or prefix the
-command with `pnpm`, eg: `pnpm anchor`.
-
-#### Sync the program id:
-
-Running this command will create a new keypair in the `anchor/target/deploy` directory and save the address to the
-Anchor config file and update the `declare_id!` macro in the `./src/lib.rs` file of the program.
-
-You will manually need to update the constant in `anchor/lib/counter-exports.ts` to match the new program id.
-
-```shell
-pnpm anchor keys sync
+```bash
+# 启动一个干净的本地验证器
+solana-test-validator -r
 ```
 
-#### Build the program:
+在另一个终端窗口中：
 
-```shell
-pnpm anchor-build
+```bash
+# 进入 anchor 项目目录
+cd anchor
+
+# 构建合约
+anchor build
+
+# (可选) 运行测试以确保合约逻辑正确
+anchor test
+
+# 部署合约到本地验证器
+anchor deploy
 ```
 
-#### Start the test validator with the program deployed:
+部署成功后，请记下终端输出的程序 ID (Program ID)。
 
-```shell
-pnpm anchor-localnet
+### 4. 配置前端
+
+前端需要知道部署好的程序 ID。通常，Anchor 会自动在 `anchor/src/multisig-exports.ts` (或类似文件) 中更新 IDL 和程序
+ID。请确保该文件中的 `MULTISIG_PROGRAM_ID` 是正确的。
+
+### 5. 启动前端开发服务器
+
+回到项目根目录：
+
+```bash
+npm run dev
 ```
 
-#### Run the tests
+现在，在浏览器中打开 `http://localhost:3000`，你应该可以看到 DApp 界面了。
 
-```shell
-pnpm anchor-test
-```
+## 🧪 手动测试流程
 
-#### Deploy to Devnet
+1. **连接钱包**: 使用 Phantom 等钱包连接到你的**本地网络 (Localhost)**。
+2. **获取测试 SOL**:
+   ```bash
+   # 给你的钱包空投一些 SOL
+   solana airdrop 2 <你的钱包地址>
+   ```
+3. **创建多签钱包**:
+    * 在 UI 上，你可以添加其他 owner 的地址（可以使用 `solana-keygen new` 创建一些测试钱包）。
+    * 设置批准阈值和初始充值金额。
+    * 点击“创建钱包”并批准交易。
+4. **管理与交互**:
+    * 创建成功后，钱包卡片会出现在列表中。
+    * 尝试**充值 (Fund)**、发起**转账提案**。
+    * 进入**管理 (Settings)** 菜单，尝试发起**修改阈值**、**添加/移除 Owner**、**管理白名单**和**暂停/恢复**的提案。
+5. **多方批准**:
+    * 在你的钱包设置中，切换到另一个被设为 owner 的账户。
+    * 你应该能看到待处理的提案。
+    * 点击**批准 (Approve)**。
+    * 一旦批准数达到阈值，**执行 (Execute)** 按钮将变为可用，点击并批准交易来完成操作。
 
-```shell
-pnpm anchor deploy --provider.cluster devnet
-```
+## 展望
 
-### web
+这个项目为许多激动人心的功能扩展奠定了坚实的基础，例如：
 
-This is a React app that uses the Anchor generated client to interact with the Solana program.
+* 支持 SPL-Token 的多签管理。
+* 集成 Solana Pay 进行无缝支付请求。
+* 为提案添加投票期限。
+* 更丰富的提案内容解析和展示。
 
-#### Commands
-
-Start the web app
-
-```shell
-pnpm dev
-```
-
-Build the web app
-
-```shell
-pnpm build
-```
+欢迎贡献代码或提出建议！

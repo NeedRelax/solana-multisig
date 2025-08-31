@@ -1,0 +1,1 @@
+/Users/chenwei/git_projects/solana_projects/push_git/solana-multisig/anchor/target/sbpf-solana-solana/release/multisig.so: /Users/chenwei/git_projects/solana_projects/push_git/solana-multisig/anchor/programs/multisig/src/lib.rs

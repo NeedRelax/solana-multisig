@@ -1,0 +1,9 @@
+/Users/chenwei/git_projects/solana_projects/push_git/solana-multisig/anchor/target/sbpf-solana-solana/release/deps/libsolana_loader_v4_interface-fd716e14a36ccec6.rmeta: /Users/chenwei/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v4-interface-2.2.1/src/lib.rs /Users/chenwei/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v4-interface-2.2.1/src/instruction.rs /Users/chenwei/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v4-interface-2.2.1/src/state.rs
+
+/Users/chenwei/git_projects/solana_projects/push_git/solana-multisig/anchor/target/sbpf-solana-solana/release/deps/libsolana_loader_v4_interface-fd716e14a36ccec6.rlib: /Users/chenwei/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v4-interface-2.2.1/src/lib.rs /Users/chenwei/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v4-interface-2.2.1/src/instruction.rs /Users/chenwei/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v4-interface-2.2.1/src/state.rs
+
+/Users/chenwei/git_projects/solana_projects/push_git/solana-multisig/anchor/target/sbpf-solana-solana/release/deps/solana_loader_v4_interface-fd716e14a36ccec6.d: /Users/chenwei/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v4-interface-2.2.1/src/lib.rs /Users/chenwei/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v4-interface-2.2.1/src/instruction.rs /Users/chenwei/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v4-interface-2.2.1/src/state.rs
+
+/Users/chenwei/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v4-interface-2.2.1/src/lib.rs:
+/Users/chenwei/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v4-interface-2.2.1/src/instruction.rs:
+/Users/chenwei/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-loader-v4-interface-2.2.1/src/state.rs:
